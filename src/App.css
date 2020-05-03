@@ -1,0 +1,10 @@
+.cove {
+  width: 100px;
+  height: 100px;
+  background: red;
+  transition: width 2s;
+}
+
+.cove:hover {
+  width: 100%;
+}
