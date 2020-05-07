@@ -44,6 +44,13 @@ export default function TablenonJSF() {
 
   const [get_time, set_time] = React.useState(0);
 
+  const [get_color, set_color] = React.useState([
+    {
+      c1:10,
+      c2:20
+    }
+  ]);
+
   const handdleTime = (ps, arrival, burst, balance) => {
     console.log(ps, arrival, burst, balance);
     Array.from(get_non_preemptive, (x) => {
@@ -75,6 +82,9 @@ export default function TablenonJSF() {
         burst: get_burst,
         balance: get_burst,
         at: get_arrival,
+        ct:0,
+        tat:0,
+        wt:0
       },
     ]);
     console.log(get_non_preemptive);
@@ -85,35 +95,95 @@ export default function TablenonJSF() {
     console.log("ทำงาน...");
 
     const interval = setInterval(() => { //กำหนดระยะเวลาการทำงานแบบต่อเนื่องตลอด ตามระยะเวลาที่เราระบุ
-      const minmin = get_non_preemptive
+      const minarrival = get_non_preemptive
         .filter(({ balance }) => balance !== 0)
         .map((e) => e.arrival);
-      console.log(...minmin);
+      console.log(...minarrival);
+
+      const minbalance = get_non_preemptive
+        .filter(({ balance }) => balance !== 0)
+        .map((e) => e.balance);
+      console.log(...minbalance);
+
+      const maxburst = get_non_preemptive
+        .map((e) => e.ct);
+      console.log(maxburst);
 
       set_non_preemtive(
         get_non_preemptive.map((x) => {
           console.log("x");
-          console.log(Math.min(...minmin));
+          console.log(Math.min(...minarrival));
           console.log(x.ps);
 
-          if (Math.min(...minmin) === Infinity) {
+          if (Math.min(...minarrival) === Infinity) {
             clearInterval(interval);
           }
           // get_non_preemptive.filter(({ balance }) => balance === "P1"
-          if (x.arrival === Math.min(...minmin)) {
-            if (x.balance > 0) {
-              if (x.balance === 1) {
-                x.checkcolor = true;
+          if(get_non_preemptive.filter(({balance}) => balance === 0).length>0){
+            
+            if (x.balance === Math.min(...minbalance)) {
+              
+              if (x.balance > 0) {
+                
+                if (x.balance === 1) {
+                  x.checkcolor = true;
+                  x.ct = +(Math.max(...maxburst)) + +(x.burst)
+                  x.tat = x.ct - x.at
+                  x.wt = x.tat - x.burst
+                  console.log(maxburst);
+                }
+                
+  
+                x.balance = x.balance - 1;
+               
               }
-
-              x.balance = x.balance - 1;
+              
+              
             }
+
+          }else{
+            if (x.arrival === Math.min(...minarrival)) {
+              
+              if (x.balance > 0) {
+                
+                if (x.balance === 1) {
+                  x.checkcolor = true;
+                  x.ct = x.burst
+                  x.tat = x.ct - x.at
+                  x.wt = x.tat -x.burst
+
+                }
+                
+                
+  
+                x.balance = x.balance - 1;
+               
+              }
+              
+              
+            }
+            
           }
           return x;
+          // console.log(get_non_preemptive.filter(({balance}) => balance === 0));
+         
+          
+          
         })
       );
     }, 1000);
   };
+  let cove = {
+    width: "40%",
+    height: "50px",
+    background: "green",
+    transition: "width 2s"
+    
+  }
+  let seho = get_color.map((x) =>{
+
+  })
+  console.log({seho});
 
   const classes = useStyles();
 
@@ -129,16 +199,16 @@ export default function TablenonJSF() {
               <TableCell >Burst Time&nbsp;(ms)</TableCell>
               <TableCell >Balance&nbsp;</TableCell>
               <TableCell >CT&nbsp;</TableCell>
-              <TableCell >TAT&nbsp;</TableCell>
-              <TableCell >WT&nbsp;</TableCell>
+              <TableCell >TAT(ct-at)&nbsp;</TableCell>
+              <TableCell >WT(tat-bt)&nbsp;</TableCell>
 
-              <TableCell align="right">บันทึกข้อมูล&nbsp;</TableCell>
+              <TableCell >deleteProcess&nbsp;</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {get_non_preemptive.map(
               //map วนลูป
-              ({ ps, arrival, burst, balance, checkcolor }, index) => (
+              ({ ps, arrival, burst, balance, checkcolor,ct,tat,wt }, index) => (
                 <TableRow>
                   <TableCell component="th" scope="row">
                     {ps}
@@ -155,13 +225,13 @@ export default function TablenonJSF() {
                     {balance}
                   </TableCell>
                   <TableCell >
-                    0
+                    {ct}
                   </TableCell>
                   <TableCell >
-                    0
+                    {tat}
                   </TableCell>
                   <TableCell >
-                    0
+                    {wt}
                   </TableCell>
                   <TableCell align="right">
                     <Button
@@ -263,13 +333,7 @@ export default function TablenonJSF() {
           </TableFooter>
         </Table>
       </TableContainer>
-      <div style={{
-        width: "20%",
-        height: "50px",
-        background: "green",
-        transition: "width 2s"
-        
-      }}></div>
+      <div style={ cove }></div>
     </>
   );
 }
