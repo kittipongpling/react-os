@@ -34,22 +34,27 @@ export default function TablenonJSF() {
     //   burst: 0,
     //   balance: 0
     // },
+    
   ]);
 
   const [get_arrival, set_arrival] = React.useState(0);
 
   const [get_burst, set_burst] = React.useState(0);
 
-  const [get_balance, set_balance] = React.useState(0);
 
-  const [get_time, set_time] = React.useState(0);
+  // const [get_balance, set_balance] = React.useState(0);
 
-  const [get_color, set_color] = React.useState([
-    {
-      c1:10,
-      c2:20
-    }
-  ]);
+  // const [get_time, set_time] = React.useState(0);
+
+  // const [get_color, set_color] = React.useState([
+  //   {
+  //     c1:10,
+  //     c2:20
+  //   }
+  // ]);
+  
+  
+  
 
   const handdleTime = (ps, arrival, burst, balance) => {
     console.log(ps, arrival, burst, balance);
@@ -71,7 +76,8 @@ export default function TablenonJSF() {
     set_non_preemtive(get_non_preemptive.filter(({ ps }) => ps !== psx)); // เราดึงค่า  ps ตามเงื่อนไขของเรา 
 
   };
- 
+
+  
 
   const handdleSave = () => {
     set_non_preemtive([
@@ -84,53 +90,71 @@ export default function TablenonJSF() {
         at: get_arrival,
         ct:0,
         tat:0,
-        wt:0
+        wt:0,
+        color:{},
+        newcolor: Math.floor(Math.random()*16777215).toString(16)
+        
+        
       },
     ]);
-    console.log(get_non_preemptive);
+    // console.log(get_non_preemptive);
   };
 
 
   const handdleCheckBalance = () => {
-    console.log("ทำงาน...");
+    // console.log("ทำงาน...");
 
     const interval = setInterval(() => { //กำหนดระยะเวลาการทำงานแบบต่อเนื่องตลอด ตามระยะเวลาที่เราระบุ
       const minarrival = get_non_preemptive
         .filter(({ balance }) => balance !== 0)
         .map((e) => e.arrival);
-      console.log(...minarrival);
+      // console.log(...minarrival);
 
       const minbalance = get_non_preemptive
         .filter(({ balance }) => balance !== 0)
         .map((e) => e.balance);
-      console.log(...minbalance);
+      // console.log(...minbalance);
 
       const maxburst = get_non_preemptive
         .map((e) => e.ct);
-      console.log(maxburst);
+      // console.log(maxburst);
 
       set_non_preemtive(
         get_non_preemptive.map((x) => {
-          console.log("x");
-          console.log(Math.min(...minarrival));
-          console.log(x.ps);
+          // console.log("x");
+          // console.log(Math.min(...minarrival));
+          // console.log(x.ps);
+
+          x.burst.reduce((e,i) => {
+            return e +i;
+          })
 
           if (Math.min(...minarrival) === Infinity) {
             clearInterval(interval);
           }
           // get_non_preemptive.filter(({ balance }) => balance === "P1"
           if(get_non_preemptive.filter(({balance}) => balance === 0).length>0){
-            
+
+
+
             if (x.balance === Math.min(...minbalance)) {
-              
+              x.color = {
+                width: (((x.burst-x.balance)+1) /(30/100))+"%",
+                
+                height: "50px",
+                background: "#"+x.newcolor,
+                transition: "width 2s"
+              }
               if (x.balance > 0) {
+                
+                console.log(get_non_preemptive.reduce(({burst},i) => burst +i));
                 
                 if (x.balance === 1) {
                   x.checkcolor = true;
                   x.ct = +(Math.max(...maxburst)) + +(x.burst)
                   x.tat = x.ct - x.at
                   x.wt = x.tat - x.burst
-                  console.log(maxburst);
+                  // console.log(maxburst);
                 }
                 
   
@@ -143,12 +167,25 @@ export default function TablenonJSF() {
 
           }else{
             if (x.arrival === Math.min(...minarrival)) {
-              
+              x.color = {
+                width: (((x.burst-x.balance)+1) /(30/100))+"%",
+
+                height: "50px",
+                background: "#"+x.newcolor,
+                transition: "width 2s"
+              }
+
               if (x.balance > 0) {
-                
+                  
+                 
+
+                  // { backgroundColor: !checkcolor ? "#fff" : "red" }
+
                 if (x.balance === 1) {
                   x.checkcolor = true;
+                  x.checkzie = false;
                   x.ct = x.burst
+                  
                   x.tat = x.ct - x.at
                   x.wt = x.tat -x.burst
 
@@ -173,17 +210,24 @@ export default function TablenonJSF() {
       );
     }, 1000);
   };
-  let cove = {
-    width: "40%",
-    height: "50px",
-    background: "green",
-    transition: "width 2s"
-    
-  }
-  let seho = get_color.map((x) =>{
 
-  })
-  console.log({seho});
+  // const color = () => {
+  //   set_non_preemtive(
+  //     Array.from(get_non_preemptive,(x) =>{
+
+  //       x.Average = 
+  //     })
+  //   )
+  // }
+  
+
+  // let seho = get_color.map((x) =>{
+
+  // })
+
+ 
+ 
+
 
   const classes = useStyles();
 
@@ -193,7 +237,7 @@ export default function TablenonJSF() {
         <Table className={classes.table} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell>Process</TableCell>
+              <TableCell >Process</TableCell>
               <TableCell>Status</TableCell>
               <TableCell >Arrival Time (ms)</TableCell>
               <TableCell >Burst Time&nbsp;(ms)</TableCell>
@@ -208,9 +252,9 @@ export default function TablenonJSF() {
           <TableBody>
             {get_non_preemptive.map(
               //map วนลูป
-              ({ ps, arrival, burst, balance, checkcolor,ct,tat,wt }, index) => (
+              ({ ps, arrival, burst, balance, checkcolor,ct,tat,wt,newcolor }, index) => (
                 <TableRow>
-                  <TableCell component="th" scope="row">
+                  <TableCell component="th" scope="row" style={{background:"#"+newcolor}}>
                     {ps}
                   </TableCell>
                   <TableCell >
@@ -333,7 +377,11 @@ export default function TablenonJSF() {
           </TableFooter>
         </Table>
       </TableContainer>
-      <div style={ cove }></div>
+      {get_non_preemptive.filter(({color}) => Object.keys(color).length > 0).map((ele) => {
+        return(
+          <div style={ ele.color }></div>
+        )
+        })}
     </>
   );
 }
