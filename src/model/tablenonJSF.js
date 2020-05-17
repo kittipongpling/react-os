@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -40,6 +40,10 @@ export default function TablenonJSF() {
   const [get_arrival, set_arrival] = React.useState(0);
 
   const [get_burst, set_burst] = React.useState(0);
+
+  const [get_sort_ct, set_sort_ct] = React.useState([]);
+  
+
 
 
   // const [get_balance, set_balance] = React.useState(0);
@@ -93,14 +97,18 @@ export default function TablenonJSF() {
         wt:0,
         color:{},
         newcolor: Math.floor(Math.random()*16777215).toString(16)
-        
-        
       },
     ]);
     // console.log(get_non_preemptive);
   };
 
+  useEffect(() => {cloneArray()}, [get_non_preemptive])
 
+  const cloneArray = (randomColor) => {
+    set_sort_ct([...get_non_preemptive])
+  };
+  console.log(get_sort_ct);
+  
   const handdleCheckBalance = () => {
     // console.log("ทำงาน...");
 
@@ -125,9 +133,7 @@ export default function TablenonJSF() {
           // console.log(Math.min(...minarrival));
           // console.log(x.ps);
 
-          x.burst.reduce((e,i) => {
-            return e +i;
-          })
+         
 
           if (Math.min(...minarrival) === Infinity) {
             clearInterval(interval);
@@ -135,16 +141,21 @@ export default function TablenonJSF() {
           // get_non_preemptive.filter(({ balance }) => balance === "P1"
           if(get_non_preemptive.filter(({balance}) => balance === 0).length>0){
 
-
+            
 
             if (x.balance === Math.min(...minbalance)) {
+              if(get_non_preemptive.length > 0) {
+                let result = get_non_preemptive.map(({burst}) => burst).reduce((burst, i) => burst + i);
+                console.log(result)
+             
               x.color = {
-                width: (((x.burst-x.balance)+1) /(30/100))+"%",
+                width: (((x.burst-x.balance)+1) /(result/100))+"%",
                 
                 height: "50px",
                 background: "#"+x.newcolor,
                 transition: "width 2s"
               }
+            }
               if (x.balance > 0) {
                 
                 console.log(get_non_preemptive.reduce(({burst},i) => burst +i));
@@ -167,14 +178,22 @@ export default function TablenonJSF() {
 
           }else{
             if (x.arrival === Math.min(...minarrival)) {
+               if(get_non_preemptive.length > 0) {
+    let result = get_non_preemptive.map(({burst}) => burst).reduce((burst, i) => burst + i);
+    console.log(result)
+ } 
+ if(get_non_preemptive.length > 0) {
+  let result = get_non_preemptive.map(({burst}) => burst).reduce((burst, i) => burst + i);
+  console.log(result)
+
               x.color = {
-                width: (((x.burst-x.balance)+1) /(30/100))+"%",
+                width: (((x.burst-x.balance)+1) /(result/100))+"%",
 
                 height: "50px",
                 background: "#"+x.newcolor,
                 transition: "width 2s"
               }
-
+            }
               if (x.balance > 0) {
                   
                  
@@ -225,14 +244,25 @@ export default function TablenonJSF() {
 
   // })
 
- 
- 
+  
 
+//  if(get_non_preemptive.length > 0) {
+//     let result = get_non_preemptive.map(({burst}) => burst).reduce((burst, i) => burst + i);
+//     console.log(result)
+//  }
+ 
+// if(get_sort_ct.length >0){
+//   let cct = get_sort_ct.filter(({ct})=> ct > 0).sort((a, b) => {
+//     return a?.ct-b?.ct;
+//   })
+//   console.log(cct , 'ct tatol');
+// }
 
   const classes = useStyles();
 
   return (
     <>
+   
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label="simple table">
           <TableHead>
@@ -377,7 +407,7 @@ export default function TablenonJSF() {
           </TableFooter>
         </Table>
       </TableContainer>
-      {get_non_preemptive.filter(({color}) => Object.keys(color).length > 0).map((ele) => {
+      {get_sort_ct.filter(({ct})=> ct > 0).sort((a, b) => a?.ct-b?.ct).filter(({color}) => Object.keys(color).length > 0).map((ele) => {
         return(
           <div style={ ele.color }></div>
         )
