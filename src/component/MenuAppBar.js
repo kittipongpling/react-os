@@ -50,7 +50,7 @@ export default function MenuAppBar() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
-            BF GROUP CPE By jarChun
+            BF GROUP CPE
           </Typography>
           {auth && (
             <div>
