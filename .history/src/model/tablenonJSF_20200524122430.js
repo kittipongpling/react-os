@@ -87,7 +87,7 @@ export default function TablenonJSF() {
         wt: 0,
         color: {},
         newcolor: Math.floor(Math.random() * 16777215).toString(16),
-        state: "Ready"
+        state: "Ready",
       },
     ]);
     // console.log(get_non_preemptive);
@@ -130,18 +130,9 @@ export default function TablenonJSF() {
             clearInterval(interval);
           }
           // get_non_preemptive.filter(({ balance }) => balance === "P1"
-
-          // if(get_non_preemptive.map(({ arrival }) => arrival === 0)){
-          //   if(x.balance === Math.min(...minbalance)){
-          //     x.balance = x.balance - 1;
-          //   }
-          // }
-
-
           if (
             get_non_preemptive.filter(({ balance }) => balance === 0).length > 0
           ) {
-            
             if (x.balance === Math.min(...minbalance)) {
               if (get_non_preemptive.length > 0) {
                 let result = get_non_preemptive
@@ -158,14 +149,13 @@ export default function TablenonJSF() {
                   transition: "width 2s",
                 };
               }
-              
               if (x.balance > 0) {
                 console.log(
                   get_non_preemptive.reduce(({ burst }, i) => burst + i)
                 );
 
                 if (x.balance === 1) {
-                  x.state = "terminated";
+                  x.state = "Wait";
 
                   x.checkcolor = true;
                   x.ct = +Math.max(...maxburst) + +x.burst;
@@ -178,16 +168,7 @@ export default function TablenonJSF() {
               }
             }
           } else {
-
             if (x.arrival === Math.min(...minarrival)) {
-
-              if( get_non_preemptive.map(({ arrival }) => arrival === 0)){
-                if(x.balance === Math.min(...minbalance)){
-                  x.balance = x.balance - 1;
-                }
-              }
-
-
               if (get_non_preemptive.length > 0) {
                 let result = get_non_preemptive
                   .map(({ burst }) => burst)
@@ -207,15 +188,14 @@ export default function TablenonJSF() {
 
                   height: "50px",
                   background: "#" + x.newcolor,
-                  transition: "width 2s"
+                  transition: "width 2s",
                 };
               }
-              
               if (x.balance > 0) {
                 // { backgroundColor: !checkcolor ? "#fff" : "red" }
 
                 if (x.balance === 1) {
-                  x.state = "terminated";
+                  x.state = "Waiting";
                   x.checkcolor = true;
                   x.checkzie = false;
                   x.ct = x.burst;
@@ -223,9 +203,8 @@ export default function TablenonJSF() {
                   x.tat = x.ct - x.at;
                   x.wt = x.tat - x.burst;
                 }
-// if(get_non_preemptive.map(({ arrival }) => arrival === 0)){
-//                 x.balance = x.balance - 1;
-// }
+
+                x.balance = x.balance - 1;
               }
             }
           }
@@ -382,16 +361,6 @@ export default function TablenonJSF() {
                   onClick={handdleSave}
                 >
                   [เพิ่มข้อมูล]
-                </Button>
-               
-              </TableCell>
-              <TableCell>
-              <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handdleCheckBalance}
-                >
-                  [RUN]
                 </Button>
               </TableCell>
             </TableRow>

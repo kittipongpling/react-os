@@ -87,7 +87,7 @@ export default function TablenonJSF() {
         wt: 0,
         color: {},
         newcolor: Math.floor(Math.random() * 16777215).toString(16),
-        state: "Ready"
+        state: "Ready",
       },
     ]);
     // console.log(get_non_preemptive);
@@ -158,7 +158,6 @@ export default function TablenonJSF() {
                   transition: "width 2s",
                 };
               }
-              
               if (x.balance > 0) {
                 console.log(
                   get_non_preemptive.reduce(({ burst }, i) => burst + i)
@@ -223,9 +222,9 @@ export default function TablenonJSF() {
                   x.tat = x.ct - x.at;
                   x.wt = x.tat - x.burst;
                 }
-// if(get_non_preemptive.map(({ arrival }) => arrival === 0)){
-//                 x.balance = x.balance - 1;
-// }
+if(get_non_preemptive.map(({ arrival }) => arrival === 0)){
+                x.balance = x.balance - 1;
+}
               }
             }
           }

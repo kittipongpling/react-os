@@ -8,6 +8,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { Button, TableFooter, TextField } from "@material-ui/core";
+import { wait } from "@testing-library/react";
 const useStyles = makeStyles({
   table: {
     minWidth: 650,
@@ -87,20 +88,15 @@ export default function TablenonJSF() {
         wt: 0,
         color: {},
         newcolor: Math.floor(Math.random() * 16777215).toString(16),
-        state: "Ready"
+        status: "Ready",
       },
     ]);
     // console.log(get_non_preemptive);
   };
 
-  useEffect(() => {
-    cloneArray();
-  }, [get_non_preemptive]);
 
-  const cloneArray = (randomColor) => {
-    set_sort_ct([...get_non_preemptive]);
-  };
-  console.log(get_sort_ct);
+
+
 
   const handdleCheckBalance = () => {
     // console.log("ทำงาน...");
@@ -130,25 +126,17 @@ export default function TablenonJSF() {
             clearInterval(interval);
           }
           // get_non_preemptive.filter(({ balance }) => balance === "P1"
-
-          // if(get_non_preemptive.map(({ arrival }) => arrival === 0)){
-          //   if(x.balance === Math.min(...minbalance)){
-          //     x.balance = x.balance - 1;
-          //   }
-          // }
-
-
           if (
             get_non_preemptive.filter(({ balance }) => balance === 0).length > 0
           ) {
-            
             if (x.balance === Math.min(...minbalance)) {
               if (get_non_preemptive.length > 0) {
                 let result = get_non_preemptive
                   .map(({ burst }) => burst)
                   .reduce((burst, i) => burst + i);
                 console.log(result);
-                x.state = "Running";
+
+                x.status = "Running";
 
                 x.color = {
                   width: (x.burst - x.balance + 1) / (result / 100) + "%",
@@ -158,16 +146,16 @@ export default function TablenonJSF() {
                   transition: "width 2s",
                 };
               }
-              
               if (x.balance > 0) {
                 console.log(
                   get_non_preemptive.reduce(({ burst }, i) => burst + i)
                 );
 
                 if (x.balance === 1) {
-                  x.state = "terminated";
-
                   x.checkcolor = true;
+
+                  x.status = "Wait";
+
                   x.ct = +Math.max(...maxburst) + +x.burst;
                   x.tat = x.ct - x.at;
                   x.wt = x.tat - x.burst;
@@ -178,16 +166,7 @@ export default function TablenonJSF() {
               }
             }
           } else {
-
             if (x.arrival === Math.min(...minarrival)) {
-
-              if( get_non_preemptive.map(({ arrival }) => arrival === 0)){
-                if(x.balance === Math.min(...minbalance)){
-                  x.balance = x.balance - 1;
-                }
-              }
-
-
               if (get_non_preemptive.length > 0) {
                 let result = get_non_preemptive
                   .map(({ burst }) => burst)
@@ -195,37 +174,37 @@ export default function TablenonJSF() {
                 console.log(result);
               }
               if (get_non_preemptive.length > 0) {
+                // Process ... กำลังทำงาน
                 let result = get_non_preemptive
                   .map(({ burst }) => burst)
                   .reduce((burst, i) => burst + i);
                 console.log(result);
 
-                x.state = "Running";
+                x.status = "Running";
 
                 x.color = {
                   width: (x.burst - x.balance + 1) / (result / 100) + "%",
 
                   height: "50px",
                   background: "#" + x.newcolor,
-                  transition: "width 2s"
+                  transition: "width 2s",
                 };
               }
-              
               if (x.balance > 0) {
                 // { backgroundColor: !checkcolor ? "#fff" : "red" }
 
                 if (x.balance === 1) {
-                  x.state = "terminated";
+                  // process ... ทำงานเสร็จแล้ว
                   x.checkcolor = true;
+                  x.status = "Wait";
                   x.checkzie = false;
                   x.ct = x.burst;
 
                   x.tat = x.ct - x.at;
                   x.wt = x.tat - x.burst;
                 }
-// if(get_non_preemptive.map(({ arrival }) => arrival === 0)){
-//                 x.balance = x.balance - 1;
-// }
+
+                x.balance = x.balance - 1;
               }
             }
           }
@@ -295,7 +274,7 @@ export default function TablenonJSF() {
                   tat,
                   wt,
                   newcolor,
-                  state,
+                  status,
                 },
                 index
               ) => (
@@ -307,7 +286,11 @@ export default function TablenonJSF() {
                   >
                     {ps}
                   </TableCell>
-                  <TableCell>{state}</TableCell>
+                  <TableCell
+                  // style={{ set_non_preemtive(get_non_preemptive.) }}
+                  >
+                    {status}
+                  </TableCell>
                   <TableCell>{arrival}</TableCell>
                   <TableCell>{burst}</TableCell>
                   <TableCell
@@ -382,16 +365,6 @@ export default function TablenonJSF() {
                   onClick={handdleSave}
                 >
                   [เพิ่มข้อมูล]
-                </Button>
-               
-              </TableCell>
-              <TableCell>
-              <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handdleCheckBalance}
-                >
-                  [RUN]
                 </Button>
               </TableCell>
             </TableRow>

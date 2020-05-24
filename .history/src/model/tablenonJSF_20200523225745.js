@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, {useEffect} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -8,6 +8,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { Button, TableFooter, TextField } from "@material-ui/core";
+import { wait } from "@testing-library/react";
 const useStyles = makeStyles({
   table: {
     minWidth: 650,
@@ -27,14 +28,14 @@ const rows = [
 ];
 
 export default function TablenonJSF() {
-  const [get_non_preemptive, set_non_preemtive] = React.useState([
-    // สเตจ [สเตจ (value),setstatus ฟังชั่น] ค่าเริ่มต้น ตั้งเป็น array
+  const [get_non_preemptive, set_non_preemtive] = React.useState([ // สเตจ [สเตจ (value),setstatus ฟังชั่น] ค่าเริ่มต้น ตั้งเป็น array
     // {
     //   ps: "P1",
     //   arrival: 0,
     //   burst: 0,
     //   balance: 0
     // },
+    
   ]);
 
   const [get_arrival, set_arrival] = React.useState(0);
@@ -42,6 +43,8 @@ export default function TablenonJSF() {
   const [get_burst, set_burst] = React.useState(0);
 
   const [get_sort_ct, set_sort_ct] = React.useState([]);
+  
+
 
   // const [get_balance, set_balance] = React.useState(0);
 
@@ -53,6 +56,9 @@ export default function TablenonJSF() {
   //     c2:20
   //   }
   // ]);
+  
+  
+  
 
   const handdleTime = (ps, arrival, burst, balance) => {
     console.log(ps, arrival, burst, balance);
@@ -70,43 +76,45 @@ export default function TablenonJSF() {
     set_non_preemtive(get_non_preemptive);
   };
   const handdleDel = (psx) => {
-    set_non_preemtive(get_non_preemptive.filter(({ ps }) => ps !== psx)); // เราดึงค่า  ps ตามเงื่อนไขของเรา
+
+    set_non_preemtive(get_non_preemptive.filter(({ ps }) => ps !== psx)); // เราดึงค่า  ps ตามเงื่อนไขของเรา 
+
   };
+
+  
 
   const handdleSave = () => {
     set_non_preemtive([
       ...get_non_preemptive, // แตกค่า ... แล้วจะเพิ่มค่าใหม่เข้าไป
       {
-        ps: "P" + +(get_non_preemptive.length + 1), //
+        ps: "P" + +(get_non_preemptive.length + 1), // 
         arrival: get_arrival, // ส่งค่ามาจาก stat set ไว้ข้างบน
         burst: get_burst,
         balance: get_burst,
         at: get_arrival,
-        ct: 0,
-        tat: 0,
-        wt: 0,
-        color: {},
-        newcolor: Math.floor(Math.random() * 16777215).toString(16),
-        state: "Ready"
+        ct:0,
+        tat:0,
+        wt:0,
+        color:{},
+        newcolor: Math.floor(Math.random()*16777215).toString(16),
+        status:'Ready'
+
       },
     ]);
     // console.log(get_non_preemptive);
   };
 
-  useEffect(() => {
-    cloneArray();
-  }, [get_non_preemptive]);
+  useEffect(() => {cloneArray()}, [get_non_preemptive])
 
   const cloneArray = (randomColor) => {
-    set_sort_ct([...get_non_preemptive]);
+    set_sort_ct([...get_non_preemptive])
   };
   console.log(get_sort_ct);
-
+  
   const handdleCheckBalance = () => {
     // console.log("ทำงาน...");
 
-    const interval = setInterval(() => {
-      //กำหนดระยะเวลาการทำงานแบบต่อเนื่องตลอด ตามระยะเวลาที่เราระบุ
+    const interval = setInterval(() => { //กำหนดระยะเวลาการทำงานแบบต่อเนื่องตลอด ตามระยะเวลาที่เราระบุ
       const minarrival = get_non_preemptive
         .filter(({ balance }) => balance !== 0)
         .map((e) => e.arrival);
@@ -117,7 +125,8 @@ export default function TablenonJSF() {
         .map((e) => e.balance);
       // console.log(...minbalance);
 
-      const maxburst = get_non_preemptive.map((e) => e.ct);
+      const maxburst = get_non_preemptive
+        .map((e) => e.ct);
       // console.log(maxburst);
 
       set_non_preemtive(
@@ -126,111 +135,102 @@ export default function TablenonJSF() {
           // console.log(Math.min(...minarrival));
           // console.log(x.ps);
 
+         
+
           if (Math.min(...minarrival) === Infinity) {
             clearInterval(interval);
           }
           // get_non_preemptive.filter(({ balance }) => balance === "P1"
+          if(get_non_preemptive.filter(({balance}) => balance === 0).length>0){
 
-          // if(get_non_preemptive.map(({ arrival }) => arrival === 0)){
-          //   if(x.balance === Math.min(...minbalance)){
-          //     x.balance = x.balance - 1;
-          //   }
-          // }
-
-
-          if (
-            get_non_preemptive.filter(({ balance }) => balance === 0).length > 0
-          ) {
             
+
             if (x.balance === Math.min(...minbalance)) {
-              if (get_non_preemptive.length > 0) {
-                let result = get_non_preemptive
-                  .map(({ burst }) => burst)
-                  .reduce((burst, i) => burst + i);
-                console.log(result);
-                x.state = "Running";
-
-                x.color = {
-                  width: (x.burst - x.balance + 1) / (result / 100) + "%",
-
-                  height: "50px",
-                  background: "#" + x.newcolor,
-                  transition: "width 2s",
-                };
+              if(get_non_preemptive.length > 0) {
+                let result = get_non_preemptive.map(({burst}) => burst).reduce((burst, i) => burst + i);
+                console.log(result)
+             
+              x.color = {
+                width: (((x.burst-x.balance)+1) /(result/100))+"%",
+                
+                height: "50px",
+                background: "#"+x.newcolor,
+                transition: "width 2s"
               }
-              
+            }
               if (x.balance > 0) {
-                console.log(
-                  get_non_preemptive.reduce(({ burst }, i) => burst + i)
-                );
-
+                
+                console.log(get_non_preemptive.reduce(({burst},i) => burst +i));
+                
                 if (x.balance === 1) {
-                  x.state = "terminated";
-
                   x.checkcolor = true;
-                  x.ct = +Math.max(...maxburst) + +x.burst;
-                  x.tat = x.ct - x.at;
-                  x.wt = x.tat - x.burst;
+                  x.ct = +(Math.max(...maxburst)) + +(x.burst)
+                  x.tat = x.ct - x.at
+                  x.wt = x.tat - x.burst
                   // console.log(maxburst);
                 }
-
+                
+  
                 x.balance = x.balance - 1;
-              }
-            }
-          } else {
-
-            if (x.arrival === Math.min(...minarrival)) {
-
-              if( get_non_preemptive.map(({ arrival }) => arrival === 0)){
-                if(x.balance === Math.min(...minbalance)){
-                  x.balance = x.balance - 1;
-                }
-              }
-
-
-              if (get_non_preemptive.length > 0) {
-                let result = get_non_preemptive
-                  .map(({ burst }) => burst)
-                  .reduce((burst, i) => burst + i);
-                console.log(result);
-              }
-              if (get_non_preemptive.length > 0) {
-                let result = get_non_preemptive
-                  .map(({ burst }) => burst)
-                  .reduce((burst, i) => burst + i);
-                console.log(result);
-
-                x.state = "Running";
-
-                x.color = {
-                  width: (x.burst - x.balance + 1) / (result / 100) + "%",
-
-                  height: "50px",
-                  background: "#" + x.newcolor,
-                  transition: "width 2s"
-                };
+               
               }
               
-              if (x.balance > 0) {
-                // { backgroundColor: !checkcolor ? "#fff" : "red" }
+              
+            }
 
-                if (x.balance === 1) {
-                  x.state = "terminated";
-                  x.checkcolor = true;
-                  x.checkzie = false;
-                  x.ct = x.burst;
+          }else{
+            if (x.arrival === Math.min(...minarrival)) {
+               if(get_non_preemptive.length > 0) {
+    let result = get_non_preemptive.map(({burst}) => burst).reduce((burst, i) => burst + i);
+    console.log(result)
+ } 
+ if(get_non_preemptive.length > 0) {
+  let result = get_non_preemptive.map(({burst}) => burst).reduce((burst, i) => burst + i);
+  console.log(result)
 
-                  x.tat = x.ct - x.at;
-                  x.wt = x.tat - x.burst;
-                }
-// if(get_non_preemptive.map(({ arrival }) => arrival === 0)){
-//                 x.balance = x.balance - 1;
-// }
+             
+              x.status = 'Running'
+              
+              x.color = {
+                width: (((x.burst-x.balance)+1) /(result/100))+"%",
+
+                height: "50px",
+                background: "#"+x.newcolor,
+                transition: "width 2s"
               }
             }
+              if (x.balance > 0) {
+                  
+                 
+
+                  // { backgroundColor: !checkcolor ? "#fff" : "red" }
+
+                if (x.balance === 1) {
+                  x.checkcolor = true;
+                  
+                  x.checkzie = false;
+                  x.ct = x.burst
+                  
+                  x.tat = x.ct - x.at
+                  x.wt = x.tat -x.burst
+
+                }
+                
+                
+  
+                x.balance = x.balance - 1;
+               
+              }
+              
+              
+            }
+            
           }
           return x;
           // console.log(get_non_preemptive.filter(({balance}) => balance === 0));
+         
+          
+          
         })
       );
     }, 1000);
@@ -240,84 +240,81 @@ export default function TablenonJSF() {
   //   set_non_preemtive(
   //     Array.from(get_non_preemptive,(x) =>{
 
-  //       x.Average =
+  //       x.Average = 
   //     })
   //   )
   // }
+  
 
   // let seho = get_color.map((x) =>{
 
   // })
 
-  //  if(get_non_preemptive.length > 0) {
-  //     let result = get_non_preemptive.map(({burst}) => burst).reduce((burst, i) => burst + i);
-  //     console.log(result)
-  //  }
+  
 
-  // if(get_sort_ct.length >0){
-  //   let cct = get_sort_ct.filter(({ct})=> ct > 0).sort((a, b) => {
-  //     return a?.ct-b?.ct;
-  //   })
-  //   console.log(cct , 'ct tatol');
-  // }
+//  if(get_non_preemptive.length > 0) {
+//     let result = get_non_preemptive.map(({burst}) => burst).reduce((burst, i) => burst + i);
+//     console.log(result)
+//  }
+ 
+// if(get_sort_ct.length >0){
+//   let cct = get_sort_ct.filter(({ct})=> ct > 0).sort((a, b) => {
+//     return a?.ct-b?.ct;
+//   })
+//   console.log(cct , 'ct tatol');
+// }
 
   const classes = useStyles();
 
   return (
     <>
+   
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell>Process</TableCell>
+              <TableCell >Process</TableCell>
               <TableCell>Status</TableCell>
-              <TableCell>Arrival Time (ms)</TableCell>
-              <TableCell>Burst Time&nbsp;(ms)</TableCell>
-              <TableCell>Balance&nbsp;</TableCell>
-              <TableCell>CT&nbsp;</TableCell>
-              <TableCell>TAT(ct-at)&nbsp;</TableCell>
-              <TableCell>WT(tat-bt)&nbsp;</TableCell>
+              <TableCell >Arrival Time (ms)</TableCell>
+              <TableCell >Burst Time&nbsp;(ms)</TableCell>
+              <TableCell >Balance&nbsp;</TableCell>
+              <TableCell >CT&nbsp;</TableCell>
+              <TableCell >TAT(ct-at)&nbsp;</TableCell>
+              <TableCell >WT(tat-bt)&nbsp;</TableCell>
 
-              <TableCell>deleteProcess&nbsp;</TableCell>
+              <TableCell >deleteProcess&nbsp;</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {get_non_preemptive.map(
               //map วนลูป
-              (
-                {
-                  ps,
-                  arrival,
-                  burst,
-                  balance,
-                  checkcolor,
-                  ct,
-                  tat,
-                  wt,
-                  newcolor,
-                  state,
-                },
-                index
-              ) => (
+              ({ ps, arrival, burst, balance, checkcolor,ct,tat,wt,newcolor,status }, index) => (
                 <TableRow>
-                  <TableCell
-                    component="th"
-                    scope="row"
-                    style={{ background: "#" + newcolor }}
-                  >
+                  <TableCell component="th" scope="row" style={{background:"#"+newcolor}}>
                     {ps}
                   </TableCell>
-                  <TableCell>{state}</TableCell>
-                  <TableCell>{arrival}</TableCell>
-                  <TableCell>{burst}</TableCell>
+                  <TableCell 
+                  // style={{ set_non_preemtive(get_non_preemptive.) }}
+                  >
+                    {status}
+                  </TableCell>
+                  <TableCell >{arrival}</TableCell>
+                  <TableCell >{burst}</TableCell>
                   <TableCell
                     style={{ backgroundColor: !checkcolor ? "#fff" : "red" }}
+                    
                   >
                     {balance}
                   </TableCell>
-                  <TableCell>{ct}</TableCell>
-                  <TableCell>{tat}</TableCell>
-                  <TableCell>{wt}</TableCell>
+                  <TableCell >
+                    {ct}
+                  </TableCell>
+                  <TableCell >
+                    {tat}
+                  </TableCell>
+                  <TableCell >
+                    {wt}
+                  </TableCell>
                   <TableCell align="right">
                     <Button
                       variant="contained"
@@ -335,9 +332,13 @@ export default function TablenonJSF() {
               <TableCell colSpan={9}></TableCell>
             </TableRow>
             <TableRow>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-              <TableCell component="th" scope="row">
+              <TableCell>
+                
+              </TableCell>
+              <TableCell>
+
+              </TableCell>
+              <TableCell component="th" scope="row" >
                 NEW
               </TableCell>
               <TableCell>
@@ -368,13 +369,14 @@ export default function TablenonJSF() {
                   variant="outlined"
                 />
               </TableCell>
-
-              {/* <input
+              
+                {/* <input
                   defaultValue={get_balance}
                   onChange={(e) => set_balance(parseFloat(e.target.value))}
                   type="number"
                 /> */}
 
+              
               <TableCell>
                 <Button
                   variant="contained"
@@ -383,17 +385,8 @@ export default function TablenonJSF() {
                 >
                   [เพิ่มข้อมูล]
                 </Button>
-               
               </TableCell>
-              <TableCell>
-              <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handdleCheckBalance}
-                >
-                  [RUN]
-                </Button>
-              </TableCell>
+              
             </TableRow>
           </TableBody>
           <TableFooter>
@@ -408,6 +401,8 @@ export default function TablenonJSF() {
                   RUN
                 </Button>
               </TableCell>
+
+              
             </TableRow>
 
             {/* <label>Show Time :</label>
@@ -420,12 +415,10 @@ export default function TablenonJSF() {
           </TableFooter>
         </Table>
       </TableContainer>
-      {get_sort_ct
-        .filter(({ ct }) => ct > 0)
-        .sort((a, b) => a?.ct - b?.ct)
-        .filter(({ color }) => Object.keys(color).length > 0)
-        .map((ele) => {
-          return <div style={ele.color}></div>;
+      {get_sort_ct.filter(({ct})=> ct > 0).sort((a, b) => a?.ct-b?.ct).filter(({color}) => Object.keys(color).length > 0).map((ele) => {
+        return(
+          <div style={ ele.color }></div>
+        )
         })}
     </>
   );
