@@ -73,7 +73,6 @@ export default function TablenonJSF() {
     set_non_preemtive(get_non_preemptive.filter(({ ps }) => ps !== psx)); // เราดึงค่า  ps ตามเงื่อนไขของเรา
   };
 
- 
   const handdleSave = () => {
     set_non_preemtive([
       ...get_non_preemptive, // แตกค่า ... แล้วจะเพิ่มค่าใหม่เข้าไป
@@ -88,7 +87,8 @@ export default function TablenonJSF() {
         wt: 0,
         color: {},
         newcolor: Math.floor(Math.random() * 16777215).toString(16),
-        state: "Ready"
+        state: "Ready",
+        avg_wt:0
       },
     ]);
     // console.log(get_non_preemptive);
@@ -246,15 +246,20 @@ export default function TablenonJSF() {
   };
   
   if(get_non_preemptive.length > 0){
-   var wt = get_non_preemptive.map(({wt}) =>wt).reduce((wt,i) =>wt +i)
-    var avg_wt = wt / get_non_preemptive.length
-
-   var tat = get_non_preemptive.map(({tat}) =>tat).reduce((tat,i) => tat + i)
-    var avg_tat = tat / get_non_preemptive.length
+   var gg = get_non_preemptive.map(({wt}) =>wt).reduce((wt,i) =>wt +i);
   }
+  // const color = () => {
+  //   set_non_preemtive(
+  //     Array.from(get_non_preemptive,(x) =>{
 
+  //       x.Average =
+  //     })
+  //   )
+  // }
 
- 
+  // let seho = get_color.map((x) =>{
+
+  // })
 
   //  if(get_non_preemptive.length > 0) {
   //     let result = get_non_preemptive.map(({burst}) => burst).reduce((burst, i) => burst + i);
@@ -272,6 +277,7 @@ export default function TablenonJSF() {
 
   return (
     <>
+    <h1>{gg}</h1>
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label="simple table">
           <TableHead>
@@ -283,7 +289,7 @@ export default function TablenonJSF() {
               <TableCell>Balance&nbsp;</TableCell>
               <TableCell>CT&nbsp;</TableCell>
               <TableCell>TAT(ct-at)&nbsp;</TableCell>
-              <TableCell>Waiting Time&nbsp;</TableCell>
+              <TableCell>WT(tat-bt)&nbsp;</TableCell>
 
               <TableCell>deleteProcess&nbsp;</TableCell>
             </TableRow>
@@ -302,7 +308,8 @@ export default function TablenonJSF() {
                   tat,
                   wt,
                   newcolor,
-                  state
+                  state,
+                  avg_wt
                 },
                 index
               ) => (
@@ -408,9 +415,9 @@ export default function TablenonJSF() {
             <TableRow>
               <TableCell colSpan={9}>
                <label>AVG Waiting :</label>
-               {avg_wt} <br/>
+               ddd <br/>
                <label>AVG Turnaround :</label>
-               {avg_tat}
+               fffff
               </TableCell>
               <TableCell>
              

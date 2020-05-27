@@ -11,7 +11,7 @@ function App() {
     <div>
       <MenuAppBar></MenuAppBar>
       <div align="center">
-        <h1>Shortest Jop First Scheduling (Non-Preemptive)</h1>
+        <h1>Non-Preemptive Shortest Jop First Scheduling</h1>
         
        
       </div>

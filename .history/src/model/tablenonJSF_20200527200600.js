@@ -73,7 +73,6 @@ export default function TablenonJSF() {
     set_non_preemtive(get_non_preemptive.filter(({ ps }) => ps !== psx)); // เราดึงค่า  ps ตามเงื่อนไขของเรา
   };
 
- 
   const handdleSave = () => {
     set_non_preemtive([
       ...get_non_preemptive, // แตกค่า ... แล้วจะเพิ่มค่าใหม่เข้าไป
@@ -88,7 +87,8 @@ export default function TablenonJSF() {
         wt: 0,
         color: {},
         newcolor: Math.floor(Math.random() * 16777215).toString(16),
-        state: "Ready"
+        state: "Ready",
+        avg_wt:0
       },
     ]);
     // console.log(get_non_preemptive);

@@ -73,7 +73,6 @@ export default function TablenonJSF() {
     set_non_preemtive(get_non_preemptive.filter(({ ps }) => ps !== psx)); // เราดึงค่า  ps ตามเงื่อนไขของเรา
   };
 
- 
   const handdleSave = () => {
     set_non_preemtive([
       ...get_non_preemptive, // แตกค่า ... แล้วจะเพิ่มค่าใหม่เข้าไป
@@ -154,7 +153,7 @@ export default function TablenonJSF() {
                 x.state = "Running";
 
                 x.color = {
-                  width: (x.burst - x.balance +1) / (result / 100) + "%",
+                  width: (x.burst - x.balance ) / (result / 100) + "%",
 
                   height: "50px",
                   background: "#" + x.newcolor,
@@ -199,10 +198,6 @@ export default function TablenonJSF() {
                   .map(({ burst }) => burst)
                   .reduce((burst, i) => burst + i);
                 console.log(result);
-
-                x.avg_wt = get_non_preemptive
-                  .map(({wt}) => wt)
-                  .reduce((wt,i) => wt+i);
               }
               if (get_non_preemptive.length > 0) {
                 let result = get_non_preemptive
@@ -214,6 +209,7 @@ export default function TablenonJSF() {
 
                 x.color = {
                   width: (x.burst - x.balance ) / (result / 100) + "%",
+
                   height: "50px",
                   background: "#" + x.newcolor,
                   transition: "width 2s"
@@ -231,8 +227,6 @@ export default function TablenonJSF() {
 
                   x.tat = x.ct - x.at;
                   x.wt = x.tat - x.burst;
-                  
-                  
                 }
                 // x.balance = x.balance - 1;
               }
@@ -244,17 +238,19 @@ export default function TablenonJSF() {
       );
     }, 1000);
   };
-  
-  if(get_non_preemptive.length > 0){
-   var wt = get_non_preemptive.map(({wt}) =>wt).reduce((wt,i) =>wt +i)
-    var avg_wt = wt / get_non_preemptive.length
 
-   var tat = get_non_preemptive.map(({tat}) =>tat).reduce((tat,i) => tat + i)
-    var avg_tat = tat / get_non_preemptive.length
-  }
+  // const color = () => {
+  //   set_non_preemtive(
+  //     Array.from(get_non_preemptive,(x) =>{
 
+  //       x.Average =
+  //     })
+  //   )
+  // }
 
- 
+  // let seho = get_color.map((x) =>{
+
+  // })
 
   //  if(get_non_preemptive.length > 0) {
   //     let result = get_non_preemptive.map(({burst}) => burst).reduce((burst, i) => burst + i);
@@ -283,7 +279,7 @@ export default function TablenonJSF() {
               <TableCell>Balance&nbsp;</TableCell>
               <TableCell>CT&nbsp;</TableCell>
               <TableCell>TAT(ct-at)&nbsp;</TableCell>
-              <TableCell>Waiting Time&nbsp;</TableCell>
+              <TableCell>WT(tat-bt)&nbsp;</TableCell>
 
               <TableCell>deleteProcess&nbsp;</TableCell>
             </TableRow>
@@ -302,7 +298,7 @@ export default function TablenonJSF() {
                   tat,
                   wt,
                   newcolor,
-                  state
+                  state,
                 },
                 index
               ) => (
@@ -335,7 +331,6 @@ export default function TablenonJSF() {
                     </Button>
                   </TableCell>
                 </TableRow>
-                
               )
             )}
 
@@ -407,13 +402,14 @@ export default function TablenonJSF() {
           <TableFooter>
             <TableRow>
               <TableCell colSpan={9}>
-               <label>AVG Waiting :</label>
-               {avg_wt} <br/>
-               <label>AVG Turnaround :</label>
-               {avg_tat}
-              </TableCell>
-              <TableCell>
-             
+                <Button
+                  onClick={handdleCheckBalance}
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                >
+                  RUN
+                </Button>
               </TableCell>
             </TableRow>
 
