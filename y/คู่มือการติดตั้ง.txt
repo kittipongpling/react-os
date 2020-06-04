@@ -1,0 +1,4 @@
+1 . ติดตั้ง node js version 9.xx ขึ้นไป
+2. ติดตั้ง node_modules โดยใช้คำสั่ง npm i 
+3. Run โปรเจค โดยใช้คำสั่ง npm start 
+4. code จะอยู๋ใน model/tablenonJSF.js
